@@ -22,13 +22,9 @@ namespace Persons.NancyModules
         {
             _queryHandler = queryHandler ?? throw new ArgumentNullException(nameof(queryHandler));
 
-            Get("/{id}", parameters =>
+            Get("/{id:guid}", parameters =>
             {
-                // Т.к. в качестве ID сущности Person используется Guid, то необходимо сначала проверить, что в запросе
-                // на извлечение пришёл именно Guid, иначе получим исключение.
-                Guid.TryParse(parameters.Id, out Guid id);
-
-                PersonDto person = _queryHandler.Handle(new GetPersonQuery(id));
+                PersonDto person = _queryHandler.Handle(new GetPersonQuery(parameters.Id));
 
                 // Если сущность не найдена, то вернуть ответ 404 NotFound.
                 if (person == null)
