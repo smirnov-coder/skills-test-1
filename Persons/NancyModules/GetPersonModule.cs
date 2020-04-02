@@ -7,14 +7,14 @@ using System;
 namespace Persons.NancyModules
 {
     /// <summary>
-    /// Модуль для извлечения сущностей <see cref="Persons.Entities.Person"/>.
+    /// РњРѕРґСѓР»СЊ РґР»СЏ РёР·РІР»РµС‡РµРЅРёСЏ СЃСѓС‰РЅРѕСЃС‚РµР№ <see cref="Persons.Entities.Person"/>.
     /// </summary>
     public class GetPersonModule : NancyModule
     {
         private IQueryHandler<GetPersonQuery, PersonDto> _queryHandler;
 
         /// <summary>
-        /// Базовый относительный Uri, обслуживаемый модулем.
+        /// Р‘Р°Р·РѕРІС‹Р№ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Р№ Uri, РѕР±СЃР»СѓР¶РёРІР°РµРјС‹Р№ РјРѕРґСѓР»РµРј.
         /// </summary>
         public static string BaseUri { get; set; } = "/api/v1/persons";
 
@@ -24,17 +24,17 @@ namespace Persons.NancyModules
 
             Get("/{id}", parameters =>
             {
-                // Т.к. в качестве ID сущности Person используется Guid, то необходимо сначала проверить, что в запросе
-                // на извлечение пришёл именно Guid, иначе получим исключение.
+                // Рў.Рє. РІ РєР°С‡РµСЃС‚РІРµ ID СЃСѓС‰РЅРѕСЃС‚Рё Person РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ Guid, С‚Рѕ РЅРµРѕР±С…РѕРґРёРјРѕ СЃРЅР°С‡Р°Р»Р° РїСЂРѕРІРµСЂРёС‚СЊ, С‡С‚Рѕ РІ Р·Р°РїСЂРѕСЃРµ
+                // РЅР° РёР·РІР»РµС‡РµРЅРёРµ РїСЂРёС€С‘Р» РёРјРµРЅРЅРѕ Guid, РёРЅР°С‡Рµ РїРѕР»СѓС‡РёРј РёСЃРєР»СЋС‡РµРЅРёРµ.
                 Guid.TryParse(parameters.Id, out Guid id);
 
                 PersonDto person = _queryHandler.Handle(new GetPersonQuery(id));
 
-                // Если сущность не найдена, то вернуть ответ 404 NotFound.
+                // Р•СЃР»Рё СЃСѓС‰РЅРѕСЃС‚СЊ РЅРµ РЅР°Р№РґРµРЅР°, С‚Рѕ РІРµСЂРЅСѓС‚СЊ РѕС‚РІРµС‚ 404 NotFound.
                 if (person == null)
                     return HttpStatusCode.NotFound;
 
-                // Иначе вернуть PersonDto в виде JSON в ответе 200 OK.
+                // РРЅР°С‡Рµ РІРµСЂРЅСѓС‚СЊ PersonDto РІ РІРёРґРµ JSON РІ РѕС‚РІРµС‚Рµ 200 OK.
                 return Response.AsJson(person);
             });
         }

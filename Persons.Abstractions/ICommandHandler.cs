@@ -3,16 +3,16 @@ using System;
 namespace Persons.Abstractions
 {
     /// <summary>
-    /// Обработчик команды CQRS.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє РєРѕРјР°РЅРґС‹ CQRS.
     /// </summary>
-    /// <typeparam name="T">Тип команды.</typeparam>
+    /// <typeparam name="T">РўРёРї РґР°РЅРЅС‹С… РѕР±СЉРµРєС‚Р° РєРѕРјР°РЅРґС‹.</typeparam>
     public interface ICommandHandler<T>
     {
         /// <summary>
-        /// Обрабатывает команду.
+        /// РћР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РєРѕРјР°РЅРґСѓ.
         /// </summary>
-        /// <param name="command">Объект команды типа <typeparamref name="T"/>.</param>
-        /// <returns>Результат выполнения команды в виде объекта <see cref="CommandResult"/>.</returns>
+        /// <param name="command">РћР±СЉРµРєС‚ РєРѕРјР°РЅРґС‹ С‚РёРїР° <typeparamref name="T"/>.</param>
+        /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ РІС‹РїРѕР»РЅРµРЅРёВ¤ РєРѕРјР°РЅРґС‹ РІ РІРёРґРµ РѕР±СЉРµРєС‚Р° <see cref="CommandResult"/>.</returns>
         CommandResult Handle(T command);
     }
 }

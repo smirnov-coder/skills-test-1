@@ -9,14 +9,14 @@ using System;
 namespace Persons.NancyModules
 {
     /// <summary>
-    /// Модуль для создания новых сущностей <see cref="Persons.Entities.Person"/>.
+    /// РњРѕРґСѓР»СЊ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РЅРѕРІС‹С… СЃСѓС‰РЅРѕСЃС‚РµР№ <see cref="Persons.Entities.Person"/>.
     /// </summary>
     public class CreatePersonModule : NancyModule
     {
         private ICommandHandler<CreatePersonCommand> _commandHandler;
 
         /// <summary>
-        /// Базовый относительный Uri, обслуживаемый модулем.
+        /// Р‘Р°Р·РѕРІС‹Р№ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Р№ Uri, РѕР±СЃР»СѓР¶РёРІР°РµРјС‹Р№ РјРѕРґСѓР»РµРј.
         /// </summary>
         public static string BaseUri { get; set; } = "/api/v1/persons";
 
@@ -26,29 +26,29 @@ namespace Persons.NancyModules
 
             Post("/", _ =>
             {
-                // Произвести привязку и валидацию модели.
+                // РџСЂРѕРёР·РІРµСЃС‚Рё РїСЂРёРІСЏР·РєСѓ Рё РІР°Р»РёРґР°С†РёСЋ РјРѕРґРµР»Рё.
                 NewPersonBindingModel model = this.BindAndValidate<NewPersonBindingModel>();
 
-                // Если данные модели не валидны, вернуть ответ 400 BadRequest (+ошибки валидации в виде JSON).
+                // Р•СЃР»Рё РґР°РЅРЅС‹Рµ РјРѕРґРµР»Рё РЅРµ РІР°Р»РёРґРЅС‹, РІРµСЂРЅСѓС‚СЊ РѕС‚РІРµС‚ 400 BadRequest (+РѕС€РёР±РєРё РІР°Р»РёРґР°С†РёРё РІ РІРёРґРµ JSON).
                 if (!ModelValidationResult.IsValid)
                 {
                     return Response.AsJson(ModelValidationResult)
                         .WithStatusCode(HttpStatusCode.BadRequest);
                 }
 
-                // Создать команду CQRS и выполнить её.
+                // РЎРѕР·РґР°С‚СЊ РєРѕРјР°РЅРґСѓ CQRS Рё РІС‹РїРѕР»РЅРёС‚СЊ РµС‘.
                 var command = new CreatePersonCommand(model.Name, model.BirthDay.Value);
                 CommandResult commandResult = _commandHandler.Handle(command);
 
-                // Проверить результат выполнения команды. Если команда не отработала нормально (созданная сущность 
-                // не валидна), вернуть ответ 422 Unprocessable Entity (+ошибки в виде JSON).
+                // РџСЂРѕРІРµСЂРёС‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚ РІС‹РїРѕР»РЅРµРЅРёСЏ РєРѕРјР°РЅРґС‹. Р•СЃР»Рё РєРѕРјР°РЅРґР° РЅРµ РѕС‚СЂР°Р±РѕС‚Р°Р»Р° РЅРѕСЂРјР°Р»СЊРЅРѕ (СЃРѕР·РґР°РЅРЅР°СЏ СЃСѓС‰РЅРѕСЃС‚СЊ 
+                // РЅРµ РІР°Р»РёРґРЅР°), РІРµСЂРЅСѓС‚СЊ РѕС‚РІРµС‚ 422 Unprocessable Entity (+РѕС€РёР±РєРё РІ РІРёРґРµ JSON).
                 if (!commandResult.Succeeded)
                 {
                     return Response.AsJson(new { errors = commandResult.Value })
                         .WithStatusCode(HttpStatusCode.UnprocessableEntity);
                 }
 
-                // Если всё нормально, вернуть ответ 201 Created c заголовком Location.
+                // Р•СЃР»Рё РІСЃС‘ РЅРѕСЂРјР°Р»СЊРЅРѕ, РІРµСЂРЅСѓС‚СЊ РѕС‚РІРµС‚ 201 Created c Р·Р°РіРѕР»РѕРІРєРѕРј Location.
                 return new Response().WithStatusCode(HttpStatusCode.Created)
                     .WithHeader("Location", $"{BaseUri}/{commandResult.Value}");
             });

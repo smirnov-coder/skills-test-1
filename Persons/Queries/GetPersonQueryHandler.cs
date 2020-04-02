@@ -7,7 +7,7 @@ using System;
 namespace Persons.Queries
 {
     /// <summary>
-    /// Обработчки запроса <see cref="GetPersonQuery"/>.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє Р·Р°РїСЂРѕСЃР° <see cref="GetPersonQuery"/>.
     /// </summary>
     public class GetPersonQueryHandler : IQueryHandler<GetPersonQuery, PersonDto>
     {
@@ -23,7 +23,7 @@ namespace Persons.Queries
             Person person = _personRepository.Find(query.PersonId);
             if (person == null)
                 return null;
-            // Согласно заданию, обработчик возвращает не сущность, а плоские данные PersonDto.
+            // РЎРѕРіР»Р°СЃРЅРѕ Р·Р°РґР°РЅРёСЋ, РѕР±СЂР°Р±РѕС‚С‡РёРє РІРѕР·РІСЂР°С‰Р°РµС‚ РЅРµ СЃСѓС‰РЅРѕСЃС‚СЊ, Р° РїР»РѕСЃРєРёРµ РґР°РЅРЅС‹Рµ PersonDto.
             return new PersonDto
             {
                 PersonId = person.Id,

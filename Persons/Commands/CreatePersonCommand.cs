@@ -3,17 +3,17 @@ using System;
 namespace Persons.Commands
 {
     /// <summary>
-    /// Команда CQRS на создание нового объекта класса <see cref="Persons.Entities.Person"/>.
+    /// РљРѕРјР°РЅРґР° CQRS РЅР° СЃРѕР·РґР°РЅРёРµ РЅРѕРІРѕРіРѕ РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃР° <see cref="Persons.Entities.Person"/>.
     /// </summary>
     public class CreatePersonCommand
     {
         /// <summary>
-        /// Имя человека.
+        /// РРјСЏ С‡РµР»РѕРІРµРєР°.
         /// </summary>
         public string Name { get; protected set; }
 
         /// <summary>
-        /// Дата рождения человека.
+        /// Р”Р°С‚Р° СЂРѕР¶РґРµРЅРёСЏ С‡РµР»РѕРІРµРєР°.
         /// </summary>
         public DateTime BirthDay { get; protected set; }
 

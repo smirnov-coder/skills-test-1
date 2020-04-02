@@ -3,17 +3,17 @@ using System;
 namespace Persons.Abstractions
 {
     /// <summary>
-    /// Обработчик запроса CQRS.
+    /// РћР±СЂР°Р±РѕС‚С‡РёРє Р·Р°РїСЂРѕСЃР° CQRS.
     /// </summary>
-    /// <typeparam name="TQuery">Тип данных объекта запроса.</typeparam>
-    /// <typeparam name="TResult">Тип данных результата запроса.</typeparam>
+    /// <typeparam name="TQuery">РўРёРї РґР°РЅРЅС‹С… РѕР±СЉРµРєС‚Р° Р·Р°РїСЂРѕСЃР°.</typeparam>
+    /// <typeparam name="TResult">РўРёРї РґР°РЅРЅС‹С… СЂРµР·СѓР»СЊС‚Р°С‚Р° Р·Р°РїСЂРѕСЃР°.</typeparam>
     public interface IQueryHandler<TQuery, TResult>
     {
         /// <summary>
-        /// Выполняет обработку запроса.
+        /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕР±СЂР°Р±РѕС‚РєСѓ Р·Р°РїСЂРѕСЃР°.
         /// </summary>
-        /// <param name="query">Объект запроса типа <typeparamref name="TQuery"/>.</param>
-        /// <returns>Результат запроса в виде объекта класса <typeparamref name="TResult"/>.</returns>
+        /// <param name="query">РћР±СЉРµРєС‚ Р·Р°РїСЂРѕСЃР° С‚РёРїР° <typeparamref name="TQuery"/>.</param>
+        /// <returns>Р РµР·СѓР»СЊС‚Р°С‚ Р·Р°РїСЂРѕСЃР° РІ РІРёРґРµ РѕР±СЉРµРєС‚Р° РєР»Р°СЃСЃР° <typeparamref name="TResult"/>.</returns>
         TResult Handle(TQuery query);
     }
 }

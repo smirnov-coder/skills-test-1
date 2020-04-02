@@ -4,21 +4,21 @@ using System;
 namespace Persons.Repositories
 {
     /// <summary>
-    /// Репозиторий сущностей <see cref="Person"/>.
+    /// Р РµРїРѕР·РёС‚РѕСЂРёР№ СЃСѓС‰РЅРѕСЃС‚РµР№ <see cref="Person"/>.
     /// </summary>
     public interface IPersonRepository
     {
         /// <summary>
-        /// Извлекает из репозитория сущность <see cref="Person"/> по ID.
+        /// РР·РІР»РµРєР°РµС‚ РёР· СЂРµРїРѕР·РёС‚РѕСЂРёСЏ СЃСѓС‰РЅРѕСЃС‚СЊ <see cref="Person"/> РїРѕ ID.
         /// </summary>
-        /// <param name="id">ID извлекаемой сущности.</param>
-        /// <returns>Объект сущности <see cref="Person"/> либо null, если сущность не найдена.</returns>
+        /// <param name="id">ID РёР·РІР»РµРєР°РµРјРѕР№ СЃСѓС‰РЅРѕСЃС‚Рё.</param>
+        /// <returns>РћР±СЉРµРєС‚ СЃСѓС‰РЅРѕСЃС‚Рё <see cref="Person"/> Р»РёР±Рѕ null, РµСЃР»Рё СЃСѓС‰РЅРѕСЃС‚СЊ РЅРµ РЅР°Р№РґРµРЅР°.</returns>
         Person Find(Guid id);
 
         /// <summary>
-        /// Добавляет в репозиторий сущность <see cref="Person"/>.
+        /// Р”РѕР±Р°РІР»СЏРµС‚ РІ СЂРµРїРѕР·РёС‚РѕСЂРёР№ СЃСѓС‰РЅРѕСЃС‚СЊ <see cref="Person"/>.
         /// </summary>
-        /// <param name="item">Добавляемая сущность <see cref="Person"/>.</param>
+        /// <param name="item">Р”РѕР±Р°РІР»СЏРµРјР°СЏ СЃСѓС‰РЅРѕСЃС‚СЊ <see cref="Person"/>.</param>
         void Insert(Person item);
     }
 }

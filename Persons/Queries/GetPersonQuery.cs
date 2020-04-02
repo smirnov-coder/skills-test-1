@@ -3,12 +3,12 @@ using System;
 namespace Persons.Queries
 {
     /// <summary>
-    /// Запрос CQRS на извлечение единичной сущности <see cref="Persons.Entities.Person"/>.
+    /// Р—Р°РїСЂРѕСЃ CQRS РЅР° РёР·РІР»РµС‡РµРЅРёРµ РµРґРёРЅРёС‡РЅРѕР№ СЃСѓС‰РЅРѕСЃС‚Рё <see cref="Persons.Entities.Person"/>.
     /// </summary>
     public class GetPersonQuery
     {
         /// <summary>
-        /// ID сущности <see cref="Persons.Entities.Person"/>.
+        /// ID СЃСѓС‰РЅРѕСЃС‚Рё <see cref="Persons.Entities.Person"/>.
         /// </summary>
         public Guid PersonId { get; set; }
 
