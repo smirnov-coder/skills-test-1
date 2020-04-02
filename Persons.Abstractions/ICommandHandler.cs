@@ -2,8 +2,17 @@ using System;
 
 namespace Persons.Abstractions
 {
+    /// <summary>
+    /// Обработчик команды CQRS.
+    /// </summary>
+    /// <typeparam name="T">Тип команды.</typeparam>
     public interface ICommandHandler<T>
     {
-        void Handle(T command);
+        /// <summary>
+        /// Обрабатывает команду.
+        /// </summary>
+        /// <param name="command">Объект команды типа <typeparamref name="T"/>.</param>
+        /// <returns>Результат выполнения команды в виде объекта <see cref="CommandResult"/>.</returns>
+        CommandResult Handle(T command);
     }
 }

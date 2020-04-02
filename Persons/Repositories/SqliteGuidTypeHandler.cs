@@ -4,7 +4,9 @@ using System.Data;
 
 namespace Persons.Repositories
 {
-    // Кастомный маппинг Guid-значений (встроенный почему-то работает из рук вон плохо, извините). :(
+    /// <summary>
+    /// Кастомный маппинг Guid-значений (встроенный почему-то работает из рук вон плохо, извините). :(
+    /// </summary>
     public class SqliteGuidTypeHandler : SqlMapper.TypeHandler<Guid>
     {
         public override void SetValue(IDbDataParameter parameter, Guid guid)

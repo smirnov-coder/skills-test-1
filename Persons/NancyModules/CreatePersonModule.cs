@@ -1,18 +1,23 @@
 using Nancy;
 using Nancy.ModelBinding;
+using Nancy.Validation;
 using Persons.Abstractions;
 using Persons.Commands;
-using Persons.Logging;
 using Persons.Models;
 using System;
 
 namespace Persons.NancyModules
 {
+    /// <summary>
+    /// Модуль для создания новых сущностей <see cref="Persons.Entities.Person"/>.
+    /// </summary>
     public class CreatePersonModule : NancyModule
     {
         private ICommandHandler<CreatePersonCommand> _commandHandler;
-        private ILog _logger = LogProvider.For<CreatePersonModule>();
 
+        /// <summary>
+        /// Базовый относительный Uri, обслуживаемый модулем.
+        /// </summary>
         public static string BaseUri { get; set; } = "/api/v1/persons";
 
         public CreatePersonModule(ICommandHandler<CreatePersonCommand> commandHandler) : base(BaseUri)
@@ -21,36 +26,31 @@ namespace Persons.NancyModules
 
             Post("/", _ =>
             {
-                // РџСЂРёРІСЏР·РєР° РјРѕРґРµР»Рё. Рљ СЃРѕР¶Р°Р»РµРЅРёСЋ, РІСЃС‚СЂРѕРµРЅРЅС‹Р№ ModelBinder РЅР°РїСЂРѕС‡СЊ РѕС‚РєР°Р·С‹РІР°РµС‚СЃСЏ РїСЂРёРЅРёРјР°С‚СЊ DateTime РІ
-                // РІРёРґРµ РґР°С‚С‹ "1977-07-07", РµРјСѓ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РЅСѓР¶РЅРѕ СѓРєР°Р·С‹РІР°С‚СЊ РІСЂРµРјСЏ, С…РѕС‚СЏ Р±С‹ РЅСѓР»РµРІРѕРµ "1977-07-07T00:00:00".
-                // Р РµС€РµРЅРёРµРј РґР°РЅРЅРѕР№ РїСЂРѕР±Р»РµРјС‹ Р±СѓРґРµС‚ Р»РёР±Рѕ РёРіРЅРѕСЂРёСЂРѕРІР°РЅРёРµ РїСЂРёРЅРёРјР°РµРјРѕРіРѕ РІ Р·Р°РїСЂРѕСЃРµ Р·РЅР°С‡РµРЅРёСЏ "BirthDay" Рё
-                // РїРѕСЃР»РµРґСѓСЋС‰РёР№ РµРіРѕ РїР°СЂСЃРёРЅРі РІСЂСѓС‡РЅСѓСЋ, Р»РёР±Рѕ, С‡С‚Рѕ Р±РѕР»РµРµ РїСЂР°РІРёР»СЊРЅРѕ - РЅР°РїРёСЃР°РЅРёРµ РєР°СЃС‚РѕРјРЅРѕРіРѕ ModelBinder. :(
-                PersonBindingModel model = null;
-                try
+                // Произвести привязку и валидацию модели.
+                NewPersonBindingModel model = this.BindAndValidate<NewPersonBindingModel>();
+
+                // Если данные модели не валидны, вернуть ответ 400 BadRequest (+ошибки валидации в виде JSON).
+                if (!ModelValidationResult.IsValid)
                 {
-                    model = this.Bind<PersonBindingModel>();
-                }
-                catch (Exception ex)
-                {
-                    _logger.ErrorException("РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР° РїСЂРёРІСЏР·РєРё РјРѕРґРµР»Рё. РЎРєРѕСЂРµРµ РІСЃРµРіРѕ РёР·-Р·Р° РЅРµРїСЂР°РІРёР»СЊРЅРѕРіРѕ " +
-                        "С„РѕСЂРјР°С‚Р° Р·РЅР°С‡РµРЅРёСЏ 'BirthDay'.", ex);
+                    return Response.AsJson(ModelValidationResult)
+                        .WithStatusCode(HttpStatusCode.BadRequest);
                 }
 
-                // Р›С‘РіРєР°СЏ СЂСѓС‡РЅР°СЏ РІР°Р»РёРґР°С†РёСЏ РјРѕРґРµР»Рё (Р·Р°РєР°Р·С‡РёРєРѕРј РЅРµ РѕРіРІРѕСЂРµРЅР° Рё РЅРµ Р·Р°С‚СЂРµР±РѕРІР°РЅР°). :)
-                if (string.IsNullOrWhiteSpace(model.Name) || !model.BirthDay.HasValue || model.BirthDay.Value == new DateTime())
-                    return HttpStatusCode.BadRequest;
-
-                // РЎРѕР·РґР°С‚СЊ РєРѕРјР°РЅРґСѓ Рё РѕР±СЂР°Р±РѕС‚Р°С‚СЊ РµС‘.
+                // Создать команду CQRS и выполнить её.
                 var command = new CreatePersonCommand(model.Name, model.BirthDay.Value);
-                _commandHandler.Handle(command);
+                CommandResult commandResult = _commandHandler.Handle(command);
 
-                // РџСЂРѕРІРµСЂРёС‚СЊ, С‡С‚Рѕ СЃСѓС‰РЅРѕСЃС‚СЊ СЃРѕР·РґР°РЅР° СѓСЃРїРµС€РЅРѕ Рё РµР№ РїСЂРёСЃРІРѕРµРЅ ID.
-                Guid createdPersonId = (_commandHandler as CreatePersonCommandHandler).CreatedPersonId;
-                if (createdPersonId == Guid.Empty)
-                    return HttpStatusCode.UnprocessableEntity;
+                // Проверить результат выполнения команды. Если команда не отработала нормально (созданная сущность 
+                // не валидна), вернуть ответ 422 Unprocessable Entity (+ошибки в виде JSON).
+                if (!commandResult.Succeeded)
+                {
+                    return Response.AsJson(new { errors = commandResult.Value })
+                        .WithStatusCode(HttpStatusCode.UnprocessableEntity);
+                }
 
+                // Если всё нормально, вернуть ответ 201 Created c заголовком Location.
                 return new Response().WithStatusCode(HttpStatusCode.Created)
-                    .WithHeader("Location", $"{BaseUri}/{createdPersonId}");
+                    .WithHeader("Location", $"{BaseUri}/{commandResult.Value}");
             });
         }
     }

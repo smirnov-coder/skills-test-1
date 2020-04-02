@@ -6,14 +6,18 @@ using System.Data;
 
 namespace Persons.Service
 {
+    /// <summary>
+    /// Windows-сервис (фейковый), в котором хостится Self-hosted NancyFx App.
+    /// </summary>
     public class PersonsService : IDisposable
     {
         private NancyHost _nancyHost;
-
-        // SQLite InMemory Database будет жить в памяти, пока живо хотя бы одно соединение к ней.
+        // SQLite InMemory Database будет жить в памяти, пока живо хотя бы одно подключение к ней.
         private IDbConnection _masterConnection;
 
-        // Endpoint, по которому будет доступно наше Self-Hosted NancyFx App.
+        /// <summary>
+        /// Endpoint, по которому будет доступно наше Self-Hosted NancyFx App.
+        /// </summary>
         public Uri Uri { get; set; } = new Uri("http://localhost:9000");
 
         public PersonsService(SqliteConnectionFactory connectionFactory)
@@ -35,6 +39,7 @@ namespace Persons.Service
             _nancyHost.Start();
         }
 
+        // Предварительная настройка SQLite InMemory DB.
         private void ConfigureDatabase()
         {
             _masterConnection.Open();
@@ -42,15 +47,15 @@ namespace Persons.Service
             command.CommandText = @"
                 CREATE TABLE IF NOT EXISTS [Persons] (
                     [Id] TEXT PRIMARY KEY,
-                    [Name] TEXT,
-                    [BirthDay] TEXT
+                    [Name] TEXT NULL,
+                    [BirthDay] TEXT NULL
                 )";
             command.ExecuteNonQuery();
         }
 
+        // Настройка Serilog (который будет автоматически подхвачен LibLog и использован в качестве LogProvider).
         private void ConfigureLogging()
         {
-            // Настроим Serilog (который будет автоматически подхвачен LibLog и использован в качестве LogProvider).
             var log = new LoggerConfiguration()
                 .WriteTo.ColoredConsole(outputTemplate: "{Timestamp:HH:mm} [{Level}] ({Name:l}) {Message}{NewLine}{Exception}")
                 .CreateLogger();

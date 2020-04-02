@@ -8,4 +8,5 @@
 - [Topshelf](http://topshelf-project.com/)
 - [LibLog](https://github.com/damianh/LibLog)
 - [Serilog](https://serilog.net/)
+- [SQLite](https://www.sqlite.org)
 - [CQRS pattern](https://ru.wikipedia.org/wiki/CQRS)

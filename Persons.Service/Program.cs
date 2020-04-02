@@ -8,7 +8,7 @@ namespace Persons.Service
     {
         public static void Main()
         {
-            // Настройка и запуск сервис-хоста для Self-Hosted NancyFx App.
+            // Настройка и запуск сервис-хоста для PersonsService.
             var rc = HostFactory.Run(x =>
             {
                 x.Service<PersonsService>(service => 

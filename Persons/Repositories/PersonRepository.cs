@@ -5,6 +5,7 @@ using System.Data.SQLite;
 
 namespace Persons.Repositories
 {
+    /// <inheritdoc cref="IPersonRepository"/>
     public class PersonRepository : IPersonRepository, IDisposable
     {
         private SQLiteConnection _connection;

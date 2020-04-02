@@ -2,11 +2,20 @@ using System;
 
 namespace Persons.Commands
 {
+    /// <summary>
+    /// Команда CQRS на создание нового объекта класса <see cref="Persons.Entities.Person"/>.
+    /// </summary>
     public class CreatePersonCommand
     {
-        public string Name { get; set; }
+        /// <summary>
+        /// Имя человека.
+        /// </summary>
+        public string Name { get; protected set; }
 
-        public DateTime BirthDay { get; set; }
+        /// <summary>
+        /// Дата рождения человека.
+        /// </summary>
+        public DateTime BirthDay { get; protected set; }
 
         public CreatePersonCommand(string name, DateTime birthDay)
         {
